@@ -72,7 +72,7 @@ const deletecard = (event) => {
   event = window.event;
   // id
   const targetID = event.target.id;
-const tagname = event.target.tagName;  //BUTTON
+  const tagname = event.target.tagName;  //BUTTON
   // match the id of the elemet with the id inside the globalstore
   // if match found remove
   globalstore = globalstore.filter((cardObject) => cardObject.id !== targetID);
@@ -89,6 +89,27 @@ const tagname = event.target.tagName;  //BUTTON
 
 };
 
-const editCard = () => {
-  console.log("Hey edit is called!");
+const editCard = (event) => 
+{event = window.event;
+const targetID = event.target.id;
+const tagname = event.target.tagName;
+
+let parentElement;
+
+if (tagname === "BUTTOM") {
+  parentElement = event.target.parentNode.parentNode;
+} else {
+  parentElement = event.target.parentNode.parentNode.parentNode;
+}
+
+
+let taskTitle = parentElement.childNodes[5].childNodes[1];
+let taskDescription = parentElement.childNodes[5].childNodes[3];
+let taskType = parentElement.childNodes[5].childNodes[5];
+let submitButton = parentElement.childNodes[7].childNodes[1];
+
+taskTitle.setAttribute("contenteditable", "true");
+taskDescription.setAttribute("contenteditable", "true");
+taskDescription.setAttribute("contenteditable", "true");
+submitButton.innerHTML = "Save Changes"
 };
