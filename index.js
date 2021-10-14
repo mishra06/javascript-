@@ -65,14 +65,15 @@ const SaveChanges = () => {
 
     globalstore.push(taskdata);
 
-    localStorage.setItem("tasky", JSON.stringify({cards:globalstore})); 
+    localStorage.setItem("tasky", JSON.stringify({cards:globalstore}));
 };
 
 const deletecard = (event) => {
   event = window.event;
   // id
   const targetID = event.target.id;
-  const tagname = event.target.tagName;  //BUTTON
+  const tagname = event.target.tagName;
+  //BUTTON
   // match the id of the elemet with the id inside the globalstore
   // if match found remove
   globalstore = globalstore.filter((cardObject) => cardObject.id !== targetID);
@@ -89,27 +90,75 @@ const deletecard = (event) => {
 
 };
 
-const editCard = (event) => 
-{event = window.event;
-const targetID = event.target.id;
-const tagname = event.target.tagName;
+const editCard = (event) => {
+  event = window.event;
+  const targetID = event.target.id;
+  const tagname = event.target.tagName;
 
-let parentElement;
+  let parentElement;
 
-if (tagname === "BUTTOM") {
-  parentElement = event.target.parentNode.parentNode;
-} else {
-  parentElement = event.target.parentNode.parentNode.parentNode;
-}
+  if(tagname === "BUTTON"){
+      parentElement = event.target.parentNode.parentNode;
+  } else{
+      parentElement = event.target.parentNode.parentNode.parentNode;
 
+  }
 
-let taskTitle = parentElement.childNodes[5].childNodes[1];
-let taskDescription = parentElement.childNodes[5].childNodes[3];
-let taskType = parentElement.childNodes[5].childNodes[5];
-let submitButton = parentElement.childNodes[7].childNodes[1];
+  let taskTitle = parentElement.childNodes[5].childNodes[1];
+  let taskDescription = parentElement.childNodes[5].childNodes[3];
+  let taskType = parentElement.childNodes[5].childNodes[5];
+  let submitButton = parentElement.childNodes[7].childNodes[1];
 
-taskTitle.setAttribute("contenteditable", "true");
-taskDescription.setAttribute("contenteditable", "true");
-taskDescription.setAttribute("contenteditable", "true");
-submitButton.innerHTML = "Save Changes"
+  taskTitle.setAttribute("contenteditable","true"); 
+  taskDescription.setAttribute("contenteditable","true");    
+  taskType.setAttribute("contenteditable","true");
+  submitButton.setAttribute("onclick","saveEditchanges.apply(this, arguments)");
+  submitButton.innerHTML = "Save Changes";    
+};
+
+const saveEditchanges = (event) => {
+  event = window.event;
+  const targetID = event.target.id;
+  const tagname = event.target.tagName;
+
+  let parentElement;
+
+  if(tagname === "BUTTON"){
+      parentElement = event.target.parentNode.parentNode;
+  } else{
+      parentElement = event.target.parentNode.parentNode.parentNode;
+
+  }
+
+  let taskTitle = parentElement.childNodes[5].childNodes[1];
+  let taskDescription = parentElement.childNodes[5].childNodes[3];
+  let taskType = parentElement.childNodes[5].childNodes[5];
+  let submitButton = parentElement.childNodes[7].childNodes[1];
+  
+  const updatedData = {
+      taskTitle: taskTitle.innerHTML,
+      taskType:  taskType.innerHTML,
+      taskDescription: taskDescription.innerHTML,
+  };
+
+  globalStore = globalStore.map((task) => {
+      if (task.id === targetID) {
+          return {
+              id: task.id,
+              imageUrl: task.imageUrl,
+              taskTitle: updatedData.taskTitle,
+              taskType: updatedData.taskType,
+              taskDescription: updatedData.taskDescription,
+          };
+      }
+      return task; //! important
+  });
+  
+  localStorage.setItem("tasky", JSON.stringify({ cards: globalStore}));
+
+  taskTitle.setAttribute("contenteditable","false"); 
+  taskDescription.setAttribute("contenteditable","false");    
+  taskType.setAttribute("contenteditable","false");
+  submitButton.removeAttribute("onclick");
+  submitButton.innerHTML = "Open Task";  
 };
