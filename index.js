@@ -2,6 +2,7 @@ const taskContainer = document.querySelector(".task__container");
 
 let globalstore =  [];
 
+
 const generatenewCard = (taskdata) => `
 <div class="col-md-6 col-lg-4">
 <div class="card">
